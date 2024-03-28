@@ -17,7 +17,12 @@ Please be aware that all releases before 1.0.0 might contain breaking changes in
 
 ## Prometheus Metrics
 
-* `GET /actuator/prometheus` will also return prometheus metrics for coverage data (there is no pre made Grafana Dashboard for this yet)
+* `GET /actuator/prometheus` will also return prometheus metrics each top level coverage-type: `branches, instructions, methods, classes, lines, complexity`
+  * `jacoco_<coverage-type>_covered{application="app"}`
+  * `jacoco_<coverage-type>_missed{application="app"}`
+  * `jacoco_<coverage-type>_total{application="app"}`
+  * `jacoco_scrape_duration_seconds` duration for **any** coverage provider scrape, this currently is not labeled with the application being scraped
+(there is no pre-made Grafana Dashboard for this yet)
 
 ## Liveliness and readiness probes
 Liveliness and readiness endpoint is at `/actuator/health`.
