@@ -1,0 +1,3 @@
+coverage:
+  local: true
+  name: ${spring.application.name:my-coverage-app}

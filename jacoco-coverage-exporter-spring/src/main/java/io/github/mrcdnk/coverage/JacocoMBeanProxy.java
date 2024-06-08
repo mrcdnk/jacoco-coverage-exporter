@@ -14,6 +14,18 @@
  *    limitations under the License.
  */
 
-package io.github.mrcdnk.coverage.jmx;
+package io.github.mrcdnk.coverage;
 
-public record JmxCoverageProvider(String name, String host, int port, String[] sourcesLocations) { }
+public interface JacocoMBeanProxy {
+        String getVersion();
+
+        String getSessionId();
+
+        void setSessionId(String id);
+
+        byte[] getExecutionData(boolean reset);
+
+        void dump(boolean reset);
+
+        void reset();
+}

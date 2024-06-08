@@ -16,14 +16,12 @@
 
 package io.github.mrcdnk.coverage.jmx;
 
+import io.github.mrcdnk.coverage.JacocoAdapter;
+import io.github.mrcdnk.coverage.JacocoMBeanProxy;
 import io.micrometer.core.annotation.Timed;
 import org.apache.commons.io.FileUtils;
-import org.jacoco.core.analysis.Analyzer;
-import org.jacoco.core.analysis.CoverageBuilder;
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.tools.ExecFileLoader;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.management.MBeanServerConnection;
@@ -40,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
-public class JmxJacocoAdapter {
+public class JmxJacocoAdapter implements JacocoAdapter<JmxCoverageProvider> {
 
     private final BundleCoverageCache bundleCoverageCache;
 
@@ -49,6 +47,7 @@ public class JmxJacocoAdapter {
     }
 
 
+    @Override
     public void resetCoverage(JmxCoverageProvider jmxCoverageProvider) throws IOException, MalformedObjectNameException {
         try (JMXConnector jmxc = getJmxConnector(jmxCoverageProvider.host(), jmxCoverageProvider.port())) {
             final MBeanServerConnection connection = jmxc.getMBeanServerConnection();
@@ -57,13 +56,14 @@ public class JmxJacocoAdapter {
         }
     }
 
+    @Override
     @Timed(description = "Time required to compute the coverage for a single provider" ,value = "jacoco_scrape_duration_seconds", histogram = true)
     public IBundleCoverage fetchCoverage(JmxCoverageProvider jmxCoverageProvider) throws IOException, MalformedObjectNameException {
         return bundleCoverageCache.getOrCompute(jmxCoverageProvider.name(), () ->  {
 
             final Collection<File> classFiles = new ArrayList<>();
 
-            for (String sourcesLocation : jmxCoverageProvider.sourcesLocations()) {
+            for (String sourcesLocation : jmxCoverageProvider.classesLocations()) {
                 File clazzDir = new File(sourcesLocation);
 
                 classFiles.addAll(FileUtils.listFiles(clazzDir, null, true));
@@ -86,15 +86,7 @@ public class JmxJacocoAdapter {
         });
     }
 
-    private IBundleCoverage analyze(final ExecutionDataStore data, Collection<File> clazzFiles) throws IOException {
-        final CoverageBuilder builder = new CoverageBuilder();
-        final Analyzer analyzer = new Analyzer(data, builder);
-        for (final File f : clazzFiles) {
-            analyzer.analyzeAll(f);
-        }
 
-        return builder.getBundle("some-report");
-    }
 
     private static JacocoMBeanProxy getJacocoProxy(MBeanServerConnection connection) throws MalformedObjectNameException {
         return MBeanServerInvocationHandler

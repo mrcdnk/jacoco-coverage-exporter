@@ -24,6 +24,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.management.MalformedObjectNameException;
@@ -33,6 +34,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Service
+@ConditionalOnProperty(name="coverage.local",havingValue = "false", matchIfMissing = true)
 public class PrometheusMetricProvider {
 
     public static final String PROMETHEUS_APPLICATION_TAG = "application";
