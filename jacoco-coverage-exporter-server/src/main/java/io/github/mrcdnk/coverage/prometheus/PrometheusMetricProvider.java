@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import javax.management.MalformedObjectNameException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -70,25 +69,23 @@ public class PrometheusMetricProvider {
                 .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
                 .toArray(String[]::new);
 
-        final String metricPrefix = Optional.ofNullable(prometheusConfiguration.prefix()).orElse("");
-
         String metricName = mapMetricName(counterEntity);
 
         Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_covered", () -> getCoverageCounter(counterEntity, ICounter::getCoveredCount, provider, jmxJacocoAdapter))
+                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_covered", () -> getCoverageCounter(counterEntity, ICounter::getCoveredCount, provider, jmxJacocoAdapter))
                 .description("Number of currently covered " + metricName)
                 .tag(PROMETHEUS_APPLICATION_TAG, providerName)
                 .tags(constantTags)
                 .register(meterRegistry);
 
         Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_missed", () -> getCoverageCounter(counterEntity, ICounter::getMissedCount, provider, jmxJacocoAdapter))
+                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_missed", () -> getCoverageCounter(counterEntity, ICounter::getMissedCount, provider, jmxJacocoAdapter))
                 .description("Number of currently missed " + metricName)
                 .tag(PROMETHEUS_APPLICATION_TAG, providerName)
                 .tags(constantTags)
                 .register(meterRegistry);
         Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_total", () -> getCoverageCounter(counterEntity, ICounter::getTotalCount, provider, jmxJacocoAdapter))
+                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_total", () -> getCoverageCounter(counterEntity, ICounter::getTotalCount, provider, jmxJacocoAdapter))
                 .description("Total amount of " + metricName + " that can be covered")
                 .tag(PROMETHEUS_APPLICATION_TAG, providerName)
                 .tags(constantTags)

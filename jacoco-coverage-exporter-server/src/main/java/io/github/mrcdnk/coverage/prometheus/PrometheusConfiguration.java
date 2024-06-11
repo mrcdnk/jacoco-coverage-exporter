@@ -22,4 +22,4 @@ import java.util.Map;
 
 @ConfigurationProperties(prefix = "coverage.prometheus")
 
-public record PrometheusConfiguration(String prefix, Map<String, String> labels) {}
+public record PrometheusConfiguration(Map<String, String> labels) {}
