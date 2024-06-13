@@ -28,6 +28,7 @@ import org.springframework.jmx.access.MBeanProxyFactoryBean;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import java.util.Map;
 import java.util.Optional;
 
 @Configuration
@@ -39,6 +40,9 @@ public class CoverageExporterAutoConfig {
 
     @Value("${coverage.name}")
     private String name;
+
+    @Value("#{${coverage.prometheus.labels:{T(java.util.Collections).emptyMap()}}}")
+    private Map<String, String> addedTags;
 
     private final MeterRegistry meterRegistry;
 
@@ -70,7 +74,7 @@ public class CoverageExporterAutoConfig {
 
     @Bean
     public LocalPrometheusMetricProvider localPrometheusMetricProvider(LocalJacocoConfig localJacocoConfig) throws MalformedObjectNameException {
-        return new LocalPrometheusMetricProvider(localJacocoAdapter(), meterRegistry, localJacocoConfig);
+        return new LocalPrometheusMetricProvider(localJacocoAdapter(), meterRegistry, localJacocoConfig, addedTags);
     }
 
 

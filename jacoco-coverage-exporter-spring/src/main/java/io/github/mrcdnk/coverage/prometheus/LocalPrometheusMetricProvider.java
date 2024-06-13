@@ -16,60 +16,55 @@
 
 package io.github.mrcdnk.coverage.prometheus;
 
+import io.github.mrcdnk.coverage.GaugeFactory;
 import io.github.mrcdnk.coverage.LocalJacocoAdapter;
 import io.github.mrcdnk.coverage.LocalJacocoConfig;
-import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
 
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class LocalPrometheusMetricProvider {
 
-    public static final String PROMETHEUS_APPLICATION_TAG = "application";
-    public static final String PROMETHEUS_METRIC_PREFIX = "jacoco_";
     private final MeterRegistry meterRegistry;
     private final LocalJacocoAdapter jmxJacocoAdapter;
+    private final Map<String, String> addedTags;
 
     public LocalPrometheusMetricProvider(
             LocalJacocoAdapter jmxJacocoAdapter,
             MeterRegistry meterRegistry,
-            LocalJacocoConfig localJacocoConfig) {
+            LocalJacocoConfig localJacocoConfig,
+            Map<String, String> addedTags) {
         this.jmxJacocoAdapter = jmxJacocoAdapter;
         this.meterRegistry = meterRegistry;
-
-        String providerName = localJacocoConfig.name();
+        this.addedTags = addedTags;
 
         for (ICoverageNode.CounterEntity counterEntity : ICoverageNode.CounterEntity.values()) {
-            createGaugeForCounterEntity(providerName, localJacocoConfig, counterEntity);
+            createGaugeForCounterEntity(localJacocoConfig, counterEntity);
         }
     }
 
-    private  void createGaugeForCounterEntity(String providerName, LocalJacocoConfig provider, ICoverageNode.CounterEntity counterEntity) {
-
+    private  void createGaugeForCounterEntity(LocalJacocoConfig provider, ICoverageNode.CounterEntity counterEntity) {
         String metricName = mapMetricName(counterEntity);
 
-        Gauge
-                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_covered", () -> getCoverageCounter(counterEntity, ICounter::getCoveredCount, provider, jmxJacocoAdapter))
-                .description("Number of currently covered " + metricName)
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .register(meterRegistry);
+        String[] constantTags = addedTags.entrySet()
+                .stream()
+                .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+                .toArray(String[]::new);;
 
-        Gauge
-                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_missed", () -> getCoverageCounter(counterEntity, ICounter::getMissedCount, provider, jmxJacocoAdapter))
-                .description("Number of currently missed " + metricName)
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .register(meterRegistry);
-        Gauge
-                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_total", () -> getCoverageCounter(counterEntity, ICounter::getTotalCount, provider, jmxJacocoAdapter))
-                .description("Total amount of " + metricName + " that can be covered")
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .register(meterRegistry);
+        for (GaugeFactory.Type type : GaugeFactory.Type.values()) {
+            GaugeFactory
+                    .create(metricName, type, () -> getCoverageCounter(counterEntity, type.getCountGetter(), provider, jmxJacocoAdapter), constantTags)
+                    .register(meterRegistry);
+
+        }
     }
 
-    private String mapMetricName(ICoverageNode.CounterEntity counterEntity) {
+    protected static String mapMetricName(ICoverageNode.CounterEntity counterEntity) {
         return switch (counterEntity) {
             case BRANCH -> "branches";
             case INSTRUCTION -> "instructions";

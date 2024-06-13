@@ -30,12 +30,13 @@ import java.util.Collection;
 public interface JacocoAdapter<T extends CoverageProvider> {
     void resetCoverage(T coverageProvider) throws IOException, MalformedObjectNameException;
 
-    @Timed(description = "Time required to compute the coverage for a single provider", value = "jacoco_scrape_duration_seconds", histogram = true)
+    @Timed(description = "Time required to fetch the coverage for a single application", value = "jacoco_scrape_duration_seconds", histogram = true)
     IBundleCoverage fetchCoverage(T coverageProvider) throws IOException, MalformedObjectNameException;
 
     default IBundleCoverage analyze(final ExecutionDataStore data, Collection<File> clazzFiles) throws IOException {
         final CoverageBuilder builder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(data, builder);
+
         for (final File f : clazzFiles) {
             analyzer.analyzeAll(f);
         }

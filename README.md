@@ -1,11 +1,17 @@
 # jacoco-coverage-exporter
-Prometheus Exporter for fetching runtime jacoco coverage data provided through jmx
-
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mrcdnk/jacoco-coverage-exporter/blob/master/LICENSE)
 [![Release version](https://img.shields.io/github/v/release/mrcdnk/jacoco-coverage-exporter)](https://github.com/mrcdnk/jacoco-coverage-exporter/releases)
 [![Docker pulls](https://img.shields.io/docker/pulls/mrcdnk/jacoco-coverage-exporter)](https://hub.docker.com/r/mrcdnk/jacoco-coverage-exporter)
 
-Please be aware that all releases before 1.0.0 might contain breaking changes in order to finish the initial MVP.
+Prometheus Exporter for fetching runtime jacoco coverage data provided through jmx.
+
+
+Why do I need this? In case you want to know how much of your code base is being tested by integrative tests! 
+
+It is easy to fetch the coverage when executing unit tests running on the same machine as the tests, but if you have tests running from outside this usually becomes more effort than most are willing to invest. This project aims to provide an easy to setup way of monitoring this!
+
+
+**Please be aware that all releases before 1.0.0 might contain breaking changes in order to finish the initial MVP.**
 
 # Prometheus Spring Auto Config
 
@@ -14,15 +20,18 @@ This will by default try to load the class files from /app/classes/ which is the
 
 ```Yaml
 coverage:
+  prometheus:
+    labels:
+      <tagKey1>: <tagValue1>
   classesLocations: <first Path to class files>;<second path to class files>
 ```
 In most cases you will add it in the `JAVA_TOOL_OPTIONS` or `_JAVA_OPTIONS` as `-Dcoverage.classesLocations=<path1>;<path2` if you only want to modify the deployment.
 
-The metrics currently follow the same format as described in [Prometheus Metrics](#prometheus-metrics)
+The metrics follow the same format as described in [Prometheus Metrics](#prometheus-metrics)
 
-Currently the only way to reset the coverage for this use case is to use jmx or the exporter [Server](#server). In the future this will be possible through an additional reset management endpoint.
+Currently the only way to reset the coverage for this use case is to use jmx or the [Export Server](#export-server). In the future this will be possible through an additional reset management endpoint.
 
-# Server
+# Export Server
 
 ## Features
 * **REST Api for JaCoCo Coverage** — Manage Coverage data for a Set of configured application
@@ -47,7 +56,7 @@ Liveliness and readiness endpoint is at `/actuator/health`.
 
 ## Getting Started
 
-You can either build a jar yourself or use the container build through jib. 
+You can either build a jar yourself or use the container build through jib available on [hub.docker.com](https://hub.docker.com/r/mrcdnk/jacoco-coverage-exporter). 
 
 ### Helm Chart
 
