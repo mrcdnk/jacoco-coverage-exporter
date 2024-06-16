@@ -27,6 +27,7 @@
 	<groupId>io.github.mrcdnk</groupId>
 	<artifactId>jacoco-coverage-exporter</artifactId>
 	<version>${revision}</version>
+	<packaging>pom</packaging>
 	<name>jacoco-coverage-exporter</name>
 	<description>Prometheus Exporter for runtime jacoco coverage data</description>
 	<licenses>
@@ -36,6 +37,10 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	<modules>
+		<module>jacoco-coverage-exporter-server</module>
+		<module>jacoco-coverage-exporter-spring</module>
+	</modules>
 	<properties>
 		<revision>master-SNAPSHOT</revision>
 		<java.version>21</java.version>
@@ -86,6 +91,15 @@
 			<version>2.15.1</version>
 		</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.github.mrcdnk</groupId>
+				<artifactId>jacoco-coverage-exporter-spring</artifactId>
+				<version>${revision}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -94,18 +108,9 @@
 					<artifactId>license-maven-plugin</artifactId>
 					<version>2.4.0</version>
 				</plugin>
-				<plugin>
-					<groupId>com.google.cloud.tools</groupId>
-					<artifactId>jib-maven-plugin</artifactId>
-					<version>3.4.1</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -118,24 +123,18 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<configuration>
-					<from>
-						<image>eclipse-temurin:${java.version}-jre</image>
-					</from>
-					<to>
-						<image>docker.io/mrcdnk/jacoco-coverage-exporter</image>
-					</to>
-					<container>
-						<mainClass>io.github.mrcdnk.coverage.JacocoCoverageExporter</mainClass>
-						<extraClasspath>/config</extraClasspath>
-					</container>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>oss.sonatype.org</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>oss.sonatype.org</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<reporting>
 		<plugins>
 			<plugin>

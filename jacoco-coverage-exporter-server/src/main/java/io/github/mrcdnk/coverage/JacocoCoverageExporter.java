@@ -21,8 +21,10 @@ import io.github.mrcdnk.coverage.prometheus.PrometheusConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan("io.github.mrcdnk.coverage")
 @EnableConfigurationProperties({RemoteCollectionConfiguration.class, PrometheusConfiguration.class})
 public class JacocoCoverageExporter {
 

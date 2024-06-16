@@ -16,27 +16,28 @@
 
 package io.github.mrcdnk.coverage.prometheus;
 
+import io.github.mrcdnk.coverage.GaugeFactory;
 import io.github.mrcdnk.coverage.configuration.RemoteCollectionConfiguration;
 import io.github.mrcdnk.coverage.jmx.JmxCoverageProvider;
 import io.github.mrcdnk.coverage.jmx.JmxJacocoAdapter;
-import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.ICoverageNode;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import javax.management.MalformedObjectNameException;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Service
+@ConditionalOnProperty(name="coverage.local",havingValue = "false", matchIfMissing = true)
 public class PrometheusMetricProvider {
 
-    public static final String PROMETHEUS_APPLICATION_TAG = "application";
-    public static final String PROMETHEUS_METRIC_PREFIX = "jacoco_";
     private final MeterRegistry meterRegistry;
     private final JmxJacocoAdapter jmxJacocoAdapter;
 
@@ -62,50 +63,27 @@ public class PrometheusMetricProvider {
 
     private  void createGaugeForCounterEntity(String providerName, JmxCoverageProvider provider, ICoverageNode.CounterEntity counterEntity) {
 
-        String[] constantTags = prometheusConfiguration.labels()
+        Map<String, String> tagMap = new HashMap<>(prometheusConfiguration.labels());
+        tagMap.put(GaugeFactory.PROMETHEUS_APPLICATION_TAG, providerName);
+
+        String[] tags = tagMap
                 .entrySet()
                 .stream()
                 .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
                 .toArray(String[]::new);
 
-        final String metricPrefix = Optional.ofNullable(prometheusConfiguration.prefix()).orElse("");
+        String metricName = LocalPrometheusMetricProvider.mapMetricName(counterEntity);
 
-        String metricName = mapMetricName(counterEntity);
+        for (GaugeFactory.Type type : GaugeFactory.Type.values()) {
+            GaugeFactory
+                    .create(metricName, type, () -> getCoverageCounter(counterEntity, type.getCountGetter(), provider, jmxJacocoAdapter), tags)
+                    .register(meterRegistry);
 
-        Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_covered", () -> getCoverageCounter(counterEntity, ICounter::getCoveredCount, provider, jmxJacocoAdapter))
-                .description("Number of currently covered " + metricName)
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .tags(constantTags)
-                .register(meterRegistry);
-
-        Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_missed", () -> getCoverageCounter(counterEntity, ICounter::getMissedCount, provider, jmxJacocoAdapter))
-                .description("Number of currently missed " + metricName)
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .tags(constantTags)
-                .register(meterRegistry);
-        Gauge
-                .builder(metricPrefix + PROMETHEUS_METRIC_PREFIX + metricName + "_total", () -> getCoverageCounter(counterEntity, ICounter::getTotalCount, provider, jmxJacocoAdapter))
-                .description("Total amount of " + metricName + " that can be covered")
-                .tag(PROMETHEUS_APPLICATION_TAG, providerName)
-                .tags(constantTags)
-                .register(meterRegistry);
-    }
-
-    private String mapMetricName(ICoverageNode.CounterEntity counterEntity) {
-        return switch (counterEntity) {
-            case BRANCH -> "branches";
-            case INSTRUCTION -> "instructions";
-            case METHOD -> "methods";
-            case CLASS -> "classes";
-            case LINE -> "lines";
-            case COMPLEXITY -> "complexity";
-        };
+        }
     }
 
 
-    private static int getCoverageCounter(ICoverageNode.CounterEntity counter, Function<ICounter, Integer> getValue, JmxCoverageProvider provider, JmxJacocoAdapter jmxJacocoAdapter) {
+    public static int getCoverageCounter(ICoverageNode.CounterEntity counter, Function<ICounter, Integer> getValue, JmxCoverageProvider provider, JmxJacocoAdapter jmxJacocoAdapter) {
         IBundleCoverage bundleCoverage;
 
         try {

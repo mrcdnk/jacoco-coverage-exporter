@@ -14,18 +14,12 @@
  *    limitations under the License.
  */
 
-package io.github.mrcdnk.coverage.jmx;
+package io.github.mrcdnk.coverage.prometheus;
 
-public interface JacocoMBeanProxy {
-        String getVersion();
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-        String getSessionId();
+import java.util.Map;
 
-        void setSessionId(String id);
+@ConfigurationProperties(prefix = "coverage.prometheus")
 
-        byte[] getExecutionData(boolean reset);
-
-        void dump(boolean reset);
-
-        void reset();
-}
+public record PrometheusConfiguration(Map<String, String> labels) {}

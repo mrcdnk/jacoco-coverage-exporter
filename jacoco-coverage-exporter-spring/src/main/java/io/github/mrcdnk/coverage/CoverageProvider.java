@@ -14,12 +14,10 @@
  *    limitations under the License.
  */
 
-package io.github.mrcdnk.coverage.prometheus;
+package io.github.mrcdnk.coverage;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+public interface CoverageProvider {
+    String name();
 
-import java.util.Map;
-
-@ConfigurationProperties(prefix = "coverage.prometheus")
-
-public record PrometheusConfiguration(String prefix, Map<String, String> labels) {}
+    String[] classesLocations();
+}
