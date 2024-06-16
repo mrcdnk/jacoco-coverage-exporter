@@ -17,12 +17,12 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          server-id: oss.sonatype.org
+          server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
       - name: Build artifacts and publish to GitHub Packages
         run: |
-          mvn --batch-mode deploy com.google.cloud.tools:jib-maven-plugin:3.4.1:build \
+          mvn --batch-mode deploy -P release com.google.cloud.tools:jib-maven-plugin:3.4.1:build \
           -Drevision=${{ inputs.releaseversion }} \
           -Djib.to.image=docker.io/${{ github.repository }}:${{ inputs.releaseversion }} \
           -Djib.to.auth.username=${{ github.actor }} \
@@ -49,4 +49,4 @@ jobs:
             ### Things that changed in this release
             ${{ steps.changelog.outputs.changelog }}
           draft: false
-          prerelease: false
+          prerelease: true
