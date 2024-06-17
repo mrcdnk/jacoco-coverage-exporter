@@ -24,25 +24,43 @@
 		<version>3.2.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>io.github.mrcdnk</groupId>
 	<artifactId>jacoco-coverage-exporter</artifactId>
-	<version>${revision}</version>
+	<version>master-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
 	<name>jacoco-coverage-exporter</name>
 	<description>Prometheus Exporter for runtime jacoco coverage data</description>
+	<url>https://github.com/mrcdnk/jacoco-coverage-exporter</url>
+
 	<licenses>
 		<license>
-			<name>EPL-2.0</name>
-			<url>https://www.eclipse.org/legal/epl-2.0/</url>
-			<distribution>repo</distribution>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<name>Marco Deneke</name>
+			<email>mrcdnk@t-online.de</email>
+			<organizationUrl>https://github.com/mrcdnk/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/mrcdnk/jacoco-coverage-exporter.git</connection>
+		<developerConnection>scm:git:ssh://github.com:mrcdnk/jacoco-coverage-exporter</developerConnection>
+		<url>https://github.com/mrcdnk/jacoco-coverage-exporter/tree/main</url>
+	</scm>
+
 	<modules>
 		<module>jacoco-coverage-exporter-server</module>
 		<module>jacoco-coverage-exporter-spring</module>
 	</modules>
+
 	<properties>
-		<revision>master-SNAPSHOT</revision>
 		<java.version>21</java.version>
 		<org.jacoco.version>0.8.11</org.jacoco.version>
 	</properties>
@@ -96,7 +114,7 @@
 			<dependency>
 				<groupId>io.github.mrcdnk</groupId>
 				<artifactId>jacoco-coverage-exporter-spring</artifactId>
-				<version>${revision}</version>
+				<version>0.1.0-beta</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -111,6 +129,11 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.16.2</version>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -132,16 +155,57 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.13</version>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.2.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>0.4.0</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<publishingServerId>central</publishingServerId>
+							<tokenAuth>true</tokenAuth>
+							<checksums>required</checksums>
 						</configuration>
 					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.3.0</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.6.2</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
@@ -155,4 +219,14 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>central</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+        <repository>
+            <id>central</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+	</distributionManagement>
 </project>

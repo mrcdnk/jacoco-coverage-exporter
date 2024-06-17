@@ -4,14 +4,11 @@
     <parent>
         <groupId>io.github.mrcdnk</groupId>
         <artifactId>jacoco-coverage-exporter</artifactId>
-        <version>${revision}</version>
+        <version>master-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jacoco-coverage-exporter-spring</artifactId>
     <packaging>jar</packaging>
-    <name>jacoco-coverage-exporter-spring</name>
-    <url>http://maven.apache.org</url>
-
     <build>
         <plugins>
             <plugin>

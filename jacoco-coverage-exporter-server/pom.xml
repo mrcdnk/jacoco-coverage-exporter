@@ -22,7 +22,7 @@
     <parent>
         <groupId>io.github.mrcdnk</groupId>
         <artifactId>jacoco-coverage-exporter</artifactId>
-        <version>${revision}</version>
+        <version>master-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
