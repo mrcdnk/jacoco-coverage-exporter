@@ -26,8 +26,7 @@ jobs:
         run: mvn versions:set "-DnewVersion=${{ inputs.releaseversion }}"
       - name: Build artifacts and publish to GitHub Packages
         run: |
-          mvn --batch-mode deploy -P release com.google.cloud.tools:jib-maven-plugin:3.4.1:build \
-          -Djib.to.image=docker.io/${{ github.repository }}:${{ inputs.releaseversion }} \
+          mvn --batch-mode deploy -P release \
           -Djib.to.auth.username=${{ github.actor }} \
           -Djib.to.auth.password=${{ secrets.DOCKER_HUB_TOKEN }}
         shell: bash

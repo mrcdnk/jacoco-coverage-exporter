@@ -48,6 +48,14 @@
                     <groupId>com.google.cloud.tools</groupId>
                     <artifactId>jib-maven-plugin</artifactId>
                     <version>3.4.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -64,7 +72,7 @@
                         <image>eclipse-temurin:${java.version}-jre</image>
                     </from>
                     <to>
-                        <image>docker.io/mrcdnk/jacoco-coverage-exporter</image>
+                        <image>docker.io/mrcdnk/jacoco-coverage-exporter:${project.version}</image>
                     </to>
                     <container>
                         <mainClass>io.github.mrcdnk.coverage.JacocoCoverageExporter</mainClass>
