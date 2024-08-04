@@ -29,7 +29,28 @@ In most cases you will add it in the `JAVA_TOOL_OPTIONS` or `_JAVA_OPTIONS` as `
 
 The metrics follow the same format as described in [Prometheus Metrics](#prometheus-metrics)
 
-Currently the only way to reset the coverage for this use case is to use jmx or the [Export Server](#export-server). In the future this will be possible through an additional reset management endpoint.
+To reset the coverage data the actuator endpoint `jacoco` needs to be exposed and enabled:
+
+```Yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - jacoco
+  endpoint:
+    jacoco:
+      enabled: true
+```
+If the Actuator endpoint is available you can `POST` a reset command in the following format:
+
+```Json
+{
+  "reset": "true"
+}
+```
+
+to the path `/actuator/jacoco`.
 
 # Export Server
 

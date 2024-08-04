@@ -22,7 +22,7 @@
     <parent>
         <groupId>io.github.mrcdnk</groupId>
         <artifactId>jacoco-coverage-exporter</artifactId>
-        <version>master-SNAPSHOT</version>
+        <version>main-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -47,7 +47,7 @@
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
                     <artifactId>jib-maven-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.4.3</version>
                     <executions>
                         <execution>
                             <phase>package</phase>

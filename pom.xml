@@ -21,13 +21,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.3.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<groupId>io.github.mrcdnk</groupId>
 	<artifactId>jacoco-coverage-exporter</artifactId>
-	<version>master-SNAPSHOT</version>
+	<version>main-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>jacoco-coverage-exporter</name>
@@ -62,7 +62,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<org.jacoco.version>0.8.11</org.jacoco.version>
+		<org.jacoco.version>0.8.12</org.jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>1.12.4</version>
+			<version>1.13.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.15.1</version>
+			<version>2.16.1</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -114,7 +114,7 @@
 			<dependency>
 				<groupId>io.github.mrcdnk</groupId>
 				<artifactId>jacoco-coverage-exporter-spring</artifactId>
-				<version>0.1.0-beta</version>
+				<version>main-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -132,7 +132,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.16.2</version>
+				<version>2.17.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -178,7 +178,7 @@
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>0.4.0</version>
+						<version>0.5.0</version>
 						<extensions>true</extensions>
 						<configuration>
 							<publishingServerId>central</publishingServerId>
@@ -189,7 +189,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.3.0</version>
+						<version>3.3.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -202,7 +202,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.6.2</version>
+						<version>3.8.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>

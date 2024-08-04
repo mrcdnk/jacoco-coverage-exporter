@@ -77,5 +77,9 @@ public class CoverageExporterAutoConfig {
         return new LocalPrometheusMetricProvider(localJacocoAdapter(), meterRegistry, localJacocoConfig, addedTags);
     }
 
+    @Bean
+    public ManagementEndpoint managementEndpoint(LocalJacocoConfig localJacocoConfig) throws MalformedObjectNameException {
+        return new ManagementEndpoint(localJacocoAdapter(), localJacocoConfig);
+    }
 
 }
