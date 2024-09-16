@@ -45,6 +45,36 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          configurationJson: |
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Enhancements",
+                  "labels": ["enhancement"]
+                },
+                {
+                  "title": "## 🐛 Fixes",
+                  "labels": ["fix"]
+                },
+                {
+                  "title": "## 🔍 Testing",
+                  "labels": ["test"]
+                },
+                {
+                  "title": "## 📘 Documentation",
+                  "labels": ["documentation"]
+                },
+                {
+                  "title": "## 🔧 Version updates",
+                  "labels": ["update"]
+                },
+                {
+                  "title": "## 📎 Others",
+                  "labels": []
+                },
+              ]
+            }
       - uses: actions/checkout@v4
         with:
           fetch-depth: 20
