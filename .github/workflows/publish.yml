@@ -49,7 +49,7 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       - name: Create tag
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         env:
           TARGET_TAG: ${{ inputs.releaseversion }}
         with:
