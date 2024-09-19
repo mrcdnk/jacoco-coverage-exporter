@@ -57,7 +57,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/${TARGET_TAG}",
+              ref: `refs/tags/${TARGET_TAG}`,
               sha: context.sha
             })
       - name: Build Changelog
