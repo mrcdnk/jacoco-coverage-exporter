@@ -22,6 +22,7 @@ import io.micrometer.core.annotation.Timed;
 import org.apache.commons.io.FileUtils;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import javax.management.MBeanServerConnection;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
+@Primary
 public class JmxJacocoAdapter implements JacocoAdapter<JmxCoverageProvider> {
 
     private final BundleCoverageCache bundleCoverageCache;
