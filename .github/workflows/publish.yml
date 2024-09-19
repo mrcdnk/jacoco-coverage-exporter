@@ -6,7 +6,14 @@ on:
       releaseversion:
         description: 'Release version'
         required: true
-
+      skip-deploy-artifacts:
+        description: "True if you want to skip all artifact deployments (maven & docker)"
+        type: choice
+        required: true
+        default: 'false'
+        options:
+          - true
+          - false
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -30,7 +37,8 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Set projects Maven version to GitHub Action GUI set version
         run: mvn versions:set "-DnewVersion=${{ inputs.releaseversion }}"
-      - name: Build artifacts and publish to GitHub Packages
+      - name: Build artifacts and publish to Maven Central
+        if: ${{ inputs.skip-deploy-artifacts == true || inputs.skip-deploy-artifacts == 'true' }}
         run: |
           mvn --batch-mode deploy -P release \
           -Djib.to.auth.username=${{ github.actor }} \
@@ -40,6 +48,18 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      - name: Create tag
+        uses: actions/github-script@v5
+        env:
+          TARGET_TAG: ${{ inputs.releaseversion }}
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${TARGET_TAG}',
+              sha: context.sha
+            })
       - name: Build Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v4
