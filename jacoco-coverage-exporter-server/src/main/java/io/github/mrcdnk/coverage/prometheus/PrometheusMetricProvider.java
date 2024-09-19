@@ -35,7 +35,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Service
-@ConditionalOnProperty(name="coverage.local",havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name="coverage.local", havingValue = "false", matchIfMissing = true)
 public class PrometheusMetricProvider {
 
     private final MeterRegistry meterRegistry;

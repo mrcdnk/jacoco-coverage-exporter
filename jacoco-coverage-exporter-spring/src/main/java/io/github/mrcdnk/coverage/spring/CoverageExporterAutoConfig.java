@@ -29,16 +29,15 @@ import org.springframework.jmx.access.MBeanProxyFactoryBean;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.Map;
-import java.util.Optional;
 
 @Configuration
-@ConditionalOnProperty(name="coverage.local", havingValue = "true")
+@ConditionalOnProperty(name="coverage.local", havingValue = "true", matchIfMissing = true)
 public class CoverageExporterAutoConfig {
 
-    @Value("${coverage.classesLocations}")
-    private String classesLocations;
+    @Value("${coverage.classesLocations:/app/classes/}")
+    private String[] classesLocations;
 
-    @Value("${coverage.name}")
+    @Value("${coverage.name:${spring.application.name:my-coverage-app}}")
     private String name;
 
     @Value("#{${coverage.prometheus.labels:{T(java.util.Collections).emptyMap()}}}")
@@ -67,9 +66,7 @@ public class CoverageExporterAutoConfig {
 
     @Bean
     public LocalJacocoConfig localJacocoConfig() {
-        String[] sources = Optional.ofNullable(classesLocations).orElse("/app/classes/").split(";");
-
-        return new LocalJacocoConfig(name, sources);
+        return new LocalJacocoConfig(name, classesLocations);
     }
 
     @Bean
