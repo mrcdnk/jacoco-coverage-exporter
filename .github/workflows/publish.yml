@@ -66,6 +66,7 @@ jobs:
         with:
           configurationJson: |
             {
+              "template": "#{{CHANGELOG}}\n\n#{{RELEASE_DIFF}}",
               "categories": [
                 {
                   "title": "## 🚀 Enhancements",
@@ -90,7 +91,7 @@ jobs:
                 {
                   "title": "## 📎 Others",
                   "labels": []
-                },
+                }
               ]
             }
       - uses: actions/checkout@v4
