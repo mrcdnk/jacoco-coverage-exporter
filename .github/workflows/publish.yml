@@ -6,11 +6,11 @@ on:
       releaseversion:
         description: 'Release version'
         required: true
-      skip-deploy-artifacts:
-        description: "True if you want to skip all artifact deployments (maven & docker)"
+      deploy-artifacts:
+        description: "True if you want to run all artifact deployments (maven & docker)"
         type: choice
         required: true
-        default: 'false'
+        default: 'true'
         options:
           - true
           - false
@@ -57,7 +57,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${TARGET_TAG}',
+              ref: "refs/tags/${TARGET_TAG}",
               sha: context.sha
             })
       - name: Build Changelog
