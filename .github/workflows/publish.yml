@@ -50,14 +50,12 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       - name: Create tag
         uses: actions/github-script@v7
-        env:
-          TARGET_TAG: ${{ inputs.releaseversion }}
         with:
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: `refs/tags/${TARGET_TAG}`,
+              ref: 'refs/tags/${{ inputs.releaseversion }}',
               sha: context.sha
             })
       - name: Build Changelog
