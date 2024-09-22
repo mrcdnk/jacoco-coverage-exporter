@@ -34,8 +34,17 @@ import java.util.Map;
 @ConditionalOnProperty(name="coverage.local", havingValue = "true", matchIfMissing = true)
 public class CoverageExporterAutoConfig {
 
+    @Value("${coverage.enableClassesCache:true}")
+    private boolean enableClassesCache;
+
     @Value("${coverage.classesLocations:/app/classes/}")
     private String[] classesLocations;
+
+    @Value("${coverage.includePatterns:glob:**.class,glob:**.jar}")
+    private String[] includePatterns;
+
+    @Value("${coverage.excludePatterns:}")
+    private String[] excludePatterns;
 
     @Value("${coverage.name:${spring.application.name:my-coverage-app}}")
     private String name;
@@ -66,7 +75,7 @@ public class CoverageExporterAutoConfig {
 
     @Bean
     public LocalJacocoConfig localJacocoConfig() {
-        return new LocalJacocoConfig(name, classesLocations);
+        return new LocalJacocoConfig(name, classesLocations, includePatterns, excludePatterns, enableClassesCache);
     }
 
     @Bean

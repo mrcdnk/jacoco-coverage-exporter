@@ -16,4 +16,10 @@
 
 package io.github.mrcdnk.coverage;
 
-public record LocalJacocoConfig(String name, String[] classesLocations) implements CoverageProvider { }
+public record LocalJacocoConfig(
+        String name,
+        String[] classesLocations,
+        String[] includePatterns,
+        String[] excludePatterns,
+        boolean enableClassesCache
+) implements CoverageProvider { }
