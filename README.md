@@ -23,7 +23,7 @@ This will by default try to load the class files from `/app/classes/` which is t
 coverage:
   classesLocations: "<first Path to class files>,<second path to class files>"
 ```
-In most cases you will add this property in the `JAVA_TOOL_OPTIONS` or `_JAVA_OPTIONS` as `-Dcoverage.classesLocations=<path1>;<path2` if you only want to modify the deployment.
+In most cases you will add this property in the `JAVA_TOOL_OPTIONS` or `_JAVA_OPTIONS` as `-Dcoverage.classesLocations=<path1>;<path2>` if you only want to modify the deployment.
 
 ## Adding dependencies to the coverage data
 JIB usually only puts the dependencies of the module building the docker file into `/app/classes/` which might not be all classes you want to collect coverage for.
