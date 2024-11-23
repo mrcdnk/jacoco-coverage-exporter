@@ -59,7 +59,7 @@ public class JmxJacocoAdapter implements JacocoAdapter<JmxCoverageProvider> {
     }
 
     @Override
-    @Timed(description = "Time required to compute the coverage for a single provider" ,value = "jacoco_scrape_duration_seconds", histogram = true)
+    @Timed(description = "Time required to compute the coverage for a single provider" ,value = "jacoco.scrape.duration.seconds", histogram = true)
     public IBundleCoverage fetchCoverage(JmxCoverageProvider jmxCoverageProvider) throws IOException, MalformedObjectNameException {
         return bundleCoverageCache.getOrCompute(jmxCoverageProvider.name(), () ->  {
 

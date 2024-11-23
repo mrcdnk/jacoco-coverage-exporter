@@ -88,7 +88,17 @@ If the Actuator endpoint is available you can `POST` a reset command in the foll
 }
 ```
 
-to the path `/actuator/jacoco`.
+to the path `/actuator/jacoco`
+
+If you are using a whitelist for metrics and have disabled `all` you will need to specifically enable the required jacoco metrics. This can be done with the standard spring management configuration for metrics:
+
+```Yaml
+management:
+  metrics:
+    enable:
+      all: false # disable all other metrics
+      jacoco: true # this enables all jacoco metrics from this provider
+```
 
 # Export Server
 

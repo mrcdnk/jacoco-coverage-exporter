@@ -26,13 +26,13 @@ import java.util.function.Supplier;
 public class GaugeFactory {
 
     public static final String PROMETHEUS_APPLICATION_TAG = "application";
-    public static final String PROMETHEUS_METRIC_PREFIX = "jacoco_";
+    public static final String PROMETHEUS_METRIC_PREFIX = "jacoco.";
 
     private  GaugeFactory() {}
 
     public static Gauge.Builder<?> create(String metricName, GaugeFactory.Type gaugeType, Supplier<Integer> coverageCounter, String[] tags) {
         return Gauge
-                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "_" + gaugeType.getSuffix(), coverageCounter::get)
+                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "." + gaugeType.getSuffix(), coverageCounter::get)
                 .description("Number of currently " + gaugeType.getSuffix() + " " + metricName)
                 .tags(tags);
     }
