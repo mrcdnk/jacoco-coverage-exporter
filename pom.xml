@@ -62,7 +62,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<org.jacoco.version>0.8.13</org.jacoco.version>
+		<org.jacoco.version>0.8.14</org.jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
