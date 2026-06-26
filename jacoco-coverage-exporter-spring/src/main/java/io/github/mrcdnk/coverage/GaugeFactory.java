@@ -32,7 +32,7 @@ public class GaugeFactory {
 
     public static Gauge.Builder<?> create(String metricName, GaugeFactory.Type gaugeType, Supplier<Integer> coverageCounter, String[] tags) {
         return Gauge
-                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "." + gaugeType.getSuffix(), coverageCounter::get)
+                .builder(PROMETHEUS_METRIC_PREFIX + metricName + "." + gaugeType.getSuffix(), coverageCounter)
                 .description("Number of currently " + gaugeType.getSuffix() + " " + metricName)
                 .tags(tags);
     }
@@ -53,7 +53,7 @@ public class GaugeFactory {
             return countGetter;
         }
 
-        String getSuffix() {
+        public String getSuffix() {
             return name().toLowerCase(Locale.ROOT);
         }
     }

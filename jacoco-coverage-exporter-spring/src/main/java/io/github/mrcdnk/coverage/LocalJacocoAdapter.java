@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.tools.ExecFileLoader;
+import org.jspecify.annotations.NonNull;
 import org.springframework.jmx.access.MBeanProxyFactoryBean;
 
 import java.io.ByteArrayInputStream;
@@ -86,8 +87,10 @@ public class LocalJacocoAdapter implements JacocoAdapter<LocalJacocoConfig> {
             }
 
             FileVisitor<Path> matcherVisitor = new SimpleFileVisitor<>() {
+
+                @NonNull
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes fileAttributes) {
+                public FileVisitResult visitFile(@NonNull Path file, @NonNull BasicFileAttributes fileAttributes) {
                     FileSystem fs = FileSystems.getDefault();
 
                     boolean toBeIncluded = false;

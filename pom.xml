@@ -21,7 +21,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.6</version>
+		<version>4.0.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -30,7 +30,7 @@
 	<version>main-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>jacoco-coverage-exporter</name>
+	<name>${project.artifactId}</name>
 	<description>Prometheus Exporter for runtime jacoco coverage data</description>
 	<url>https://github.com/mrcdnk/jacoco-coverage-exporter</url>
 
@@ -51,7 +51,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/mrcdnk/jacoco-coverage-exporter.git</connection>
-		<developerConnection>scm:git:ssh://github.com:mrcdnk/jacoco-coverage-exporter</developerConnection>
+		<developerConnection>scm:git:ssh://github.com/mrcdnk/jacoco-coverage-exporter</developerConnection>
 		<url>https://github.com/mrcdnk/jacoco-coverage-exporter/tree/main</url>
 	</scm>
 
@@ -62,7 +62,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<org.jacoco.version>0.8.13</org.jacoco.version>
+		<org.jacoco.version>0.8.15</org.jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -87,7 +87,6 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>1.15.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
@@ -102,7 +101,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.20.0</version>
+			<version>2.22.0</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
@@ -120,7 +119,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-					<version>2.6.0</version>
+					<version>2.7.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -128,7 +127,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>2.21.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -174,7 +173,7 @@
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>0.8.0</version>
+						<version>0.11.0</version>
 						<extensions>true</extensions>
 						<configuration>
 							<publishingServerId>central</publishingServerId>
@@ -185,7 +184,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.3.1</version>
+						<version>3.4.0</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -208,7 +207,6 @@
 							</execution>
 						</executions>
 					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
@@ -218,7 +216,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>2.6.0</version>
+				<version>2.7.1</version>
 			</plugin>
 		</plugins>
 	</reporting>
