@@ -8,6 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jacoco-coverage-exporter-spring</artifactId>
+    <name>${project.artifactId}</name>
     <packaging>jar</packaging>
     <build>
         <plugins>
