@@ -64,7 +64,7 @@ public class LocalPrometheusMetricProvider {
         }
     }
 
-    protected static String mapMetricName(ICoverageNode.CounterEntity counterEntity) {
+    public static String mapMetricName(ICoverageNode.CounterEntity counterEntity) {
         return switch (counterEntity) {
             case BRANCH -> "branches";
             case INSTRUCTION -> "instructions";
@@ -76,7 +76,7 @@ public class LocalPrometheusMetricProvider {
     }
 
 
-    private static int getCoverageCounter(ICoverageNode.CounterEntity counter, Function<ICounter, Integer> getValue, LocalJacocoConfig provider, LocalJacocoAdapter jmxJacocoAdapter) {
+    public static int getCoverageCounter(ICoverageNode.CounterEntity counter, Function<ICounter, Integer> getValue, LocalJacocoConfig provider, LocalJacocoAdapter jmxJacocoAdapter) {
         IBundleCoverage bundleCoverage;
 
         bundleCoverage = jmxJacocoAdapter.fetchCoverage(provider);

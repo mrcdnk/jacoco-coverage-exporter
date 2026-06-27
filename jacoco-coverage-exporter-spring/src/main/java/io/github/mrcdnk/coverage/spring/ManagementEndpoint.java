@@ -16,10 +16,19 @@
 
 package io.github.mrcdnk.coverage.spring;
 
+import io.github.mrcdnk.coverage.GaugeFactory;
 import io.github.mrcdnk.coverage.LocalJacocoAdapter;
 import io.github.mrcdnk.coverage.LocalJacocoConfig;
+import io.github.mrcdnk.coverage.prometheus.LocalPrometheusMetricProvider;
+import org.jacoco.core.analysis.IBundleCoverage;
+import org.jacoco.core.analysis.ICoverageNode;
+import org.jacoco.core.analysis.IPackageCoverage;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @WebEndpoint(id = "jacoco")
 public class ManagementEndpoint {
@@ -39,6 +48,29 @@ public class ManagementEndpoint {
         if (reset) {
             jmxJacocoAdapter.resetCoverage(localJacocoConfig);
         }
+    }
+
+    @ReadOperation
+    public Map<String, Map<String, Map<String, String>>> readCoverage() {
+        IBundleCoverage bundleCoverage = jmxJacocoAdapter.fetchCoverage(localJacocoConfig);
+
+        Map<String, Map<String, Map<String, String>>> coverageStats = new HashMap<>();
+
+        for (IPackageCoverage pkgStats : bundleCoverage.getPackages()) {
+           Map<String, Map<String, String>> stats = coverageStats.computeIfAbsent(pkgStats.getName(), key -> new HashMap<>());
+
+
+            for (ICoverageNode.CounterEntity counterEntity : ICoverageNode.CounterEntity.values()) {
+                Map<String, String> counter = stats.computeIfAbsent(LocalPrometheusMetricProvider.mapMetricName(counterEntity), key -> new HashMap<>());
+
+                for (GaugeFactory.Type type : GaugeFactory.Type.values()) {
+                    counter.put(type.getSuffix(), LocalPrometheusMetricProvider.getCoverageCounter(counterEntity, type.getCountGetter(), localJacocoConfig, jmxJacocoAdapter)+"");
+                }
+            }
+
+        }
+
+        return coverageStats;
     }
 
 }

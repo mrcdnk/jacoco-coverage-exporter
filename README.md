@@ -52,7 +52,7 @@ By default, only `/app/classes/` will be searched and the inclusion list only co
 ## Adding the jacoco java agent
 
 Additionally, you will need to add the `-javaagent:/path/to/jacocoagent.jar=jmx=true,output=none` option to generate coverage data.
-Make sure the `jacoco-agent.jar` you are using is the one classified with `-runtime.jar` as a suffix! (e.g. [org.jacoco.agent-0.8.12-runtime.jar](https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar))
+Make sure the `jacoco-agent.jar` you are using is the one classified with `-runtime.jar` as a suffix! (e.g. [org.jacoco.agent-0.8.15-runtime.jar](https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.15/org.jacoco.agent-0.8.15-runtime.jar))
 
 
 ## About Metrics
